@@ -3,15 +3,15 @@
 #define ARR(i,j,k) (labyrinth[lab_dimensions[1]*5*i + 5*j + k])
 
 int lab_dimensions[2];
+
 int *labyrinth;
 char buffer[255];
 char *token;
 FILE *fp;
 char *path;
 
-
-
 int main()
+
 {
    	extern int *labyrinth;
 	extern int lab_dimensions[];
@@ -19,162 +19,309 @@ int main()
 	extern char *path;
     extern char buffer[255];
 	extern char *token;
-    extern FILE *fp;
 
+    extern FILE *fp;
 	
-	path = "lab1.txt\0";
+
+	path = "lab2.txt\0";
+
     if ((fp = fopen(path, "r")) == NULL)
+
     {
+
 	printf("Error! opening file");
+
 	// Program exits if file pointer returns NULL.
+
 	exit(1);         
+
     }
 
     // reads text until newline 
+
     fgets(buffer, sizeof(buffer), fp);
-    
+
     token = strtok(buffer,"%");
 
 	int i,j,p,repeat;
+
 	i = 0;
+
     while( token != NULL)
+
     {
+
     	if (i > 1)
+
     		break;
+
     	lab_dimensions[i++] = atoi(token);
+
     }
 	labyrinth = (int *)malloc(lab_dimensions[0]*lab_dimensions[1]*5*sizeof(int));
+
 	load_lab(labyrinth);
 
+
+
 	repeat = 1;
+
 	
 	ARR(0,0,0) = 69;
 	//print_lab_simple();
  	fclose(fp);
+
 	//line = 
+
 	print_lab(labyrinth);
+
 	/*
+
 	printf("x:%d,y:%d\n",lab_dimensions[0],lab_dimensions[1]);
+
 	i = j = 0;
+
 	for(i=0;i<10;i++);
+
 	{
+
 		printf("i:%d/n",i);
+
 		for(j = 0;j<10;j++);
+
 		{
+
 			printf("%s i:%d j:%d ","│",i,j);
+
 				
+
 						
+
 		}
+
 		printf("%s\n","│");
+
 		
+
 	}
+
 	for(i=0;i<lab_dimensions[0];i++)
+
 	{
+
 		for(j=0;j<lab_dimensions[1];j++)
+
 		{
+
 			printf("%s i:%d j:%d ","│",i,j);
+
 		}
+
 	}
+
 	/*line = "";
+
 	line = generate_bottom_line();
+
 	printf("%s",line);*/
+
 	//printf("%s","┌──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐");
+
 	//load_lab();
+
     return 0;
+
 }
 
+
+
 void load_lab(int *labyrinth)
+
 {
-    char buffer[255];
-    char *token;
-    FILE *fp;
+
+    
+	extern int lab_dimensions[];
+
+	extern char *path;
+    extern char buffer[255];
+	extern char *token;
+
+    extern FILE *fp;
 
 
-    if ((fp = fopen("lab1.txt", "r")) == NULL)
+
+
+
+    if ((fp = fopen(path, "r")) == NULL)
+
     {
+
         printf("Error! opening file");
+
         // Program exits if file pointer returns NULL.
+
         exit(1);         
+
     }
+
+
 
     // reads text until newline 
+
     fgets(buffer, sizeof(buffer), fp);
+
     
+
     token = strtok(buffer,"%");
 
+
+
 	int i,j,k;
+
 	i = 0;
+
     while( token != NULL)
+
     {
+
     	if (i > 1)
+
     		break;
+
     	lab_dimensions[i++] = atoi(token);
+
     }
+
     
+
 	for(i = 0;i<lab_dimensions[0];i++)
+
 	{
+		memset(buffer,0,sizeof(buffer));
+
 		fgets(buffer, sizeof(buffer), fp);
+
 		for(j=0;j<lab_dimensions[1];j++)
 		{
+
 			for(k = 0;k<5;k++)
+
 			{
-				if (! k)
-				{
-					if(buffer[j] == 'x')
-						ARR(i,j,k) = -1;
-					if(buffer[j] == '*')
-						ARR(i,j,k) = 0;
-					if(buffer[j] == ' ')
-						ARR(i,j,k) = 1;
-					if(buffer[j] == '/')
-						ARR(i,j,k) = 2;
-				}
-				else
-				{
-					ARR(i,j,k) = 0;
-				}	
 				
+
+				if (! k)
+
+				{
+
+					if(buffer[j] == 'x')
+
+						ARR(i,j,k) = -1;
+
+					if(buffer[j] == '*')
+
+						ARR(i,j,k) = 0;
+
+					if(buffer[j] == ' ' || buffer[j] == 10 || buffer[j] == 13 || buffer[j] == 0)
+
+						ARR(i,j,k) = 1;
+
+					if(buffer[j] == '/')
+
+						ARR(i,j,k) = 2;
+
+				}
+
+				else
+
+				{
+
+					ARR(i,j,k) = 0;
+
+				}	
+
+				
+
 			}
+
 		}
+
 	}
+
+
 
 		//print_lab()
 		print_lab_simple();
+
 	
+
     
+
     fclose(fp);
+
 }
+
 /*
+
 void print_lab()
+
 {
+
 	//printf("%s", "┐└  ┘┴ ┬ ├ ─ ┼┌"); ^ v > <
+
 	extern int *labyrinth;
+
 	char *linea1;
+
 	char *linea2;
+
 	char *linea_arriba;
+
 	char *linea_abajo;
+
 	int i,j;
+
 	
+
 	linea_arriba = "
+
 			┌──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐
+
 			│**********│          │          │          │          │          │          │          │          │          │
+
 			│          │          │          │          │          │          │          │          │          │ 23^   17>│
+
 			│          │          │          │          │          │          │          │          │          │ 32v   74<│
+
 			│          │          │          │          │          │          │          │          │          │          │
+
 			├──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤
+
 			│          │          │          │          │          │          │          │          │          │          │
+
 			│          │          │          │          │          │          │          │          │          │          │
+
 	for(i = 0;i<lab_dimensions[0];i++)
+
 	{
+
 		for(j = 0;j<lab_dimensions[1];j++)
+
 		{
+
 			printf("%d ",ARR(i,j,0));
+
 		}
+
 		//printf(L"%ls\n",L"─");
+
 	}
+
 		
+
 }*/
+
 	
+
 void print_lab(int *labyrinth)
 
 {
@@ -405,64 +552,106 @@ void print_lab(int *labyrinth)
 
 }
 
+
 void print_lab_simple()
+
 {
+
 	int i,j;
+
 	for(i = 0;i<lab_dimensions[0];i++)
+
 	{
 
+
+
 		for(j = 0;j<lab_dimensions[1];j++)
+
 		{
+
 //			printf("T:%d, d1:%d, d2:%d, d3:%d, d4:%d  |", ARR(i,j,0), ARR(i,j,1), ARR(i,j,2), ARR(i,j,3), ARR(i,j,4));
+
 			printf("T:%d  |", ARR(i,j,0));						
+
 		}
+
 		printf("%s\n","");
+
 		
+
 	}
+
 }
 
 int laberinto_valido()
 {
 	extern char buffer[255];
 	extern char *token;
+
     extern FILE *fp;
+
 	extern char *path;
 	
 	int i,j,k,start,finals,walls,spaces;
 
+
     if ((fp = fopen(path, "r")) == NULL)
+
     {
+
 		printf("Error! opening file");
+
 		// Program exits if file pointer returns NULL.
+
 		exit(1);         
+
     }
 
+
+
     // reads text until newline 
+
     fgets(buffer, sizeof(buffer), fp);
+
     
+
     token = strtok(buffer,"%");
 
+
+
 	
+
 	i = 0;
+
     while( (token = strtok( NULL, "%")) != NULL ) 
+
     {
+
     	if (i > 1)
+
     		break;
+
     	lab_dimensions[i++] = atoi(token);
+
     }
 
 	start = finals = walls = spaces = 0;
 	for(i = 0;i<lab_dimensions[0];i++)
+
 	{
+
 		fgets(buffer, sizeof(buffer), fp);
+
 		for(j=0;j<lab_dimensions[1];j++)
+
 		{
+
 			
+
 		}
+
 	}
 }
-
-
 
 
 
