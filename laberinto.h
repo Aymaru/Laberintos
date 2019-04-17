@@ -3,7 +3,7 @@
 #include <string.h>
 
 
-void load_lab();
-void print_lab();
-char *generate_top_line();
-char *generate_bottom_line();
+void load_lab(int *labyrinth);
+void print_lab(int *labyrinth);
+void print_lab_simple();
+int laberinto_valido();
